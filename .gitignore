@@ -1,0 +1,17 @@
+# Ambiente e Senhas
+.env
+__pycache__/
+*.pyc
+*.db
+emails.db
+
+# Diretórios de saída
+relatorios/*.xlsx
+relatorios/*.csv
+logs/*.log
+
+# IDE e Ambiente Virtual
+venv/
+.venv/
+.idea/
+.vscode/

@@ -1,0 +1,120 @@
+{
+  "categories": [
+    {
+      "id": "comercial",
+      "name": "Comercial / Vendas",
+      "folder": "Comercial",
+      "color": "GREEN",
+      "description": "Orçamentos, propostas, pedidos de compra, negociações e leads comerciais",
+      "keywords_subject": [
+        "orçamento", "orcamento", "proposta", "proposta comercial",
+        "cotação", "cotacao", "tabela de preços", "tabela de precos",
+        "pedido de compra", "pedido", "novos negócios", "novos negocios",
+        "oportunidade", "reunião comercial", "reuniao comercial",
+        "apresentação comercial", "apresentacao comercial", "catálogo",
+        "catalogo", "lead", "interessado", "fechamento de contrato",
+        "tabela de valores", "condições de pagamento", "condicoes de pagamento"
+      ],
+      "keywords_body": [
+        "orçamento", "orcamento", "proposta", "cotação", "cotacao",
+        "negociação", "negociacao", "preço", "preco", "preços", "precos",
+        "valores", "desconto comercial", "prazo de entrega", "faturamento",
+        "fornecimento", "comprar", "pedido de venda", "cliente potencial",
+        "condição comercial", "condicao comercial", "representante comercial",
+        "vendas", "venda", "lead", "contrato de prestação", "proposta técnica"
+      ],
+      "senders": []
+    },
+    {
+      "id": "empresa",
+      "name": "Empresa / Operacional",
+      "folder": "Empresa",
+      "color": "CYAN",
+      "description": "Comunicações internas da empresa, reuniões, diretoria, RH e projetos",
+      "keywords_subject": [
+        "comunicado", "interno", "reunião interna", "reuniao interna",
+        "ata de reunião", "ata de reuniao", "diretoria", "rh",
+        "recursos humanos", "departamento pessoal", "holerite",
+        "contracheque", "folha de pagamento", "férias", "ferias",
+        "alinhamento de equipe", "planejamento estratégico",
+        "planejamento estrategico", "equipe", "projeto", "sprint",
+        "aviso geral", "política interna", "politica interna", "onboarding"
+      ],
+      "keywords_body": [
+        "comunicado interno", "colaboradores", "equipe interna", "diretoria",
+        "recursos humanos", "folha de ponto", "benefícios", "beneficios",
+        "banco de horas", "memorando", "alinhamento semanal", "daily",
+        "sprint review", "ata da reunião", "ata da reuniao", "projeto interno",
+        "procedimento interno", "treinamento interno"
+      ],
+      "senders": []
+    },
+    {
+      "id": "financeiro",
+      "name": "Financeiro / Cobrança",
+      "folder": "Financeiro",
+      "color": "YELLOW",
+      "description": "Boletos, notas fiscais, cobranças, comprovantes de pagamento e faturas",
+      "keywords_subject": [
+        "boleto", "nota fiscal", "nf-e", "nfe", "nfs-e", "nfse", "danfe",
+        "fatura", "comprovante de pagamento", "comprovante pix", "comprovante",
+        "recibo", "duplicata", "vencimento", "cobrança", "cobranca",
+        "aviso de vencimento", "pagamento confirmado", "extrato", "remessa"
+      ],
+      "keywords_body": [
+        "boleto bancário", "boleto bancario", "linha digitável", "linha digitavel",
+        "chave de acesso", "danfe", "nota fiscal eletrônica", "nota fiscal eletronica",
+        "comprovante de transferência", "comprovante de transferencia", "pix",
+        "vencimento em", "chave pix", "pagamento efetuado", "contas a pagar",
+        "contas a receber", "banco", "dados bancários", "dados bancarios", "quitação", "quitacao"
+      ],
+      "senders": []
+    },
+    {
+      "id": "suporte",
+      "name": "Suporte / Atendimento",
+      "folder": "Suporte",
+      "color": "MAGENTA",
+      "description": "Tickets, chamados, dúvidas técnicas, reclamações e suporte ao cliente",
+      "keywords_subject": [
+        "suporte", "chamado", "ticket", "ajuda", "dúvida", "duvida",
+        "problema", "erro", "falha", "bug", "reclamação", "reclamacao",
+        "atendimento ao cliente", "urgente", "instabilidade", "solicitação",
+        "solicitacao de suporte"
+      ],
+      "keywords_body": [
+        "número do chamado", "numero do chamado", "número do ticket",
+        "equipe de suporte", "ajuda com", "não estou conseguindo",
+        "nao estou conseguindo", "falha no sistema", "erro ao tentar",
+        "status do chamado", "atendimento", "abertura de chamado"
+      ],
+      "senders": []
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing / Newsletters",
+      "folder": "Marketing",
+      "color": "BLUE",
+      "description": "Boletins informativos, promoções, novidades e e-mails de marketing",
+      "keywords_subject": [
+        "newsletter", "promoção", "promocao", "desconto", "oferta",
+        "cupom", "black friday", "imperdível", "imperdivel", "novidades da semana",
+        "veja as novidades", "aproveite hoje"
+      ],
+      "keywords_body": [
+        "descadastre-se", "descadastrar", "cancelar inscrição", "cancelar inscricao",
+        "unsubscribe", "política de privacidade", "clique aqui para ver no navegador",
+        "este e-mail foi enviado para", "no-reply", "noreply", "não responda este email"
+      ],
+      "senders": []
+    }
+  ],
+  "weights": {
+    "subject_match": 3.0,
+    "body_match": 1.0,
+    "sender_domain_match": 10.0,
+    "sender_email_match": 20.0
+  },
+  "score_threshold": 2.0,
+  "default_folder": "Outros"
+}

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Automação de E-mails & IA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+  <!-- Navbar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+          <i class="fa-solid fa-envelope-open-text text-xl"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight text-white">AutoMail AI</h1>
+          <p class="text-xs text-slate-400">Automação Comercial & Corporativa</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <a href="/docs" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 bg-blue-950/60 border border-blue-800/60 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-code"></i> API Swagger Docs
+        </a>
+        <div id="status-badge" class="flex items-center gap-2 text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-slate-300">Sistema Conectado</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- Top Action Bar -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-800/60 p-5 rounded-2xl border border-slate-700/60">
+      <div>
+        <h2 class="text-xl font-semibold text-white">Painel de Controle e Métricas</h2>
+        <p class="text-sm text-slate-400">Triagem inteligente por regras, NLP e Inteligência Artificial</p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button onclick="triggerProcessing(true)" id="btn-dry" class="px-4 py-2 text-sm font-medium rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 transition flex items-center gap-2">
+          <i class="fa-solid fa-vial"></i> Simulação (Teste)
+        </button>
+        <button onclick="triggerProcessing(false)" id="btn-run" class="px-4 py-2 text-sm font-medium rounded-xl bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-600/30 transition flex items-center gap-2">
+          <i class="fa-solid fa-bolt"></i> Processar Agora
+        </button>
+        <button onclick="downloadLatestReport()" class="px-4 py-2 text-sm font-medium rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-200 transition flex items-center gap-2">
+          <i class="fa-solid fa-file-excel text-emerald-400"></i> Baixar Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- Metric Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+      <!-- Total -->
+      <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-slate-400 font-medium">Total de E-mails</p>
+            <h3 id="stat-total" class="text-3xl font-bold text-white mt-1">0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
+            <i class="fa-solid fa-inbox"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comercial -->
+      <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-emerald-400 font-medium">Comercial / Vendas</p>
+            <h3 id="stat-comercial" class="text-3xl font-bold text-white mt-1">0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <i class="fa-solid fa-handshake"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empresa -->
+      <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-cyan-400 font-medium">Empresa / Interno</p>
+            <h3 id="stat-empresa" class="text-3xl font-bold text-white mt-1">0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+            <i class="fa-solid fa-building"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financeiro -->
+      <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-amber-400 font-medium">Financeiro / Boletos</p>
+            <h3 id="stat-financeiro" class="text-3xl font-bold text-white mt-1">0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto Respostas -->
+      <div class="bg-slate-800/80 p-5 rounded-2xl border border-slate-700/60 relative overflow-hidden">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase tracking-wider text-purple-400 font-medium">Auto-Respostas</p>
+            <h3 id="stat-replies" class="text-3xl font-bold text-white mt-1">0</h3>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+            <i class="fa-solid fa-reply-all"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Donut Chart: Categorias -->
+      <div class="lg:col-span-2 bg-slate-800/80 p-6 rounded-2xl border border-slate-700/60">
+        <h4 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-chart-pie text-blue-400"></i> Distribuição por Categoria
+        </h4>
+        <div class="h-64 flex items-center justify-center">
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Bar Chart: Urgência -->
+      <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700/60">
+        <h4 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-fire text-rose-400"></i> Nível de Urgência
+        </h4>
+        <div class="h-64 flex items-center justify-center">
+          <canvas id="urgencyChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive AI Simulator -->
+    <div class="bg-slate-800/80 p-6 rounded-2xl border border-slate-700/60">
+      <div class="flex items-center justify-between mb-4">
+        <h4 class="text-base font-semibold text-white flex items-center gap-2">
+          <i class="fa-solid fa-brain text-indigo-400"></i> Testador Interativo de IA & Classificação
+        </h4>
+        <span class="text-xs bg-indigo-950/80 text-indigo-300 border border-indigo-800 px-2.5 py-1 rounded-md">Simulador em Tempo Real</span>
+      </div>
+      <p class="text-xs text-slate-400 mb-4">Digite qualquer assunto ou texto para testar como o algoritmo e a IA categorizam e extraem entidades instantaneamente.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-3">
+          <input id="sim-subject" type="text" placeholder="Ex: Solicitação de orçamento urgente para 50 licenças" 
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+          <textarea id="sim-body" rows="3" placeholder="Ex: Olá, gostaria de saber os valores e condições de pagamento para fechamento de contrato ainda esta semana no valor de R$ 25.000,00."
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500"></textarea>
+          <button onclick="testAiClassification()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass-chart"></i> Analisar com IA
+          </button>
+        </div>
+
+        <!-- Simulator Result Box -->
+        <div id="sim-result" class="bg-slate-900/90 border border-slate-700 rounded-xl p-4 flex flex-col justify-center text-sm text-slate-400">
+          <p class="text-center italic">Preencha os campos ao lado e clique em "Analisar com IA" para ver o resultado.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Email Table -->
+    <div class="bg-slate-800/80 rounded-2xl border border-slate-700/60 overflow-hidden">
+      <div class="p-5 border-b border-slate-700/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h4 class="text-base font-semibold text-white flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-blue-400"></i> Histórico de E-mails Processados
+          </h4>
+          <p class="text-xs text-slate-400">Registros gravados no banco de dados SQLite local</p>
+        </div>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <input id="search-box" oninput="filterTable()" type="text" placeholder="Filtrar por assunto ou remetente..." 
+            class="bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500 w-full sm:w-64">
+          <button onclick="fetchDashboardData()" class="p-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-xl transition" title="Atualizar">
+            <i class="fa-solid fa-rotate-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-900/60 text-slate-400 uppercase text-[11px] border-b border-slate-700/60">
+            <tr>
+              <th class="py-3 px-4">Data</th>
+              <th class="py-3 px-4">Remetente</th>
+              <th class="py-3 px-4">Assunto</th>
+              <th class="py-3 px-4">Categoria</th>
+              <th class="py-3 px-4">Urgência</th>
+              <th class="py-3 px-4">Resumo IA</th>
+              <th class="py-3 px-4">Valor</th>
+              <th class="py-3 px-4">Status</th>
+            </tr>
+          </thead>
+          <tbody id="email-table-body" class="divide-y divide-slate-700/40 text-slate-300">
+            <tr>
+              <td colspan="8" class="text-center py-8 text-slate-500 italic">Carregando e-mails...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let categoryChartInstance = null;
+    let urgencyChartInstance = null;
+    let allEmailsData = [];
+
+    async function fetchDashboardData() {
+      try {
+        const res = await fetch('/api/dashboard-data');
+        const data = await res.json();
+
+        // Atualiza cards de métricas
+        document.getElementById('stat-total').textContent = data.metrics.total_emails || 0;
+        document.getElementById('stat-comercial').textContent = data.metrics.by_category['Comercial / Vendas'] || 0;
+        document.getElementById('stat-empresa').textContent = data.metrics.by_category['Empresa / Operacional'] || 0;
+        document.getElementById('stat-financeiro').textContent = data.metrics.by_category['Financeiro / Cobrança'] || 0;
+        document.getElementById('stat-replies').textContent = data.metrics.auto_replies_sent || 0;
+
+        // Atualiza gráficos
+        updateCategoryChart(data.metrics.by_category);
+        updateUrgencyChart(data.metrics.by_urgency);
+
+        // Atualiza tabela
+        allEmailsData = data.recent_emails || [];
+        renderTable(allEmailsData);
+      } catch (e) {
+        console.error("Erro ao carregar dados do dashboard:", e);
+      }
+    }
+
+    function updateCategoryChart(categories) {
+      const ctx = document.getElementById('categoryChart').getContext('2d');
+      const labels = Object.keys(categories);
+      const values = Object.values(categories);
+
+      const colors = {
+        'Comercial / Vendas': '#10B981',
+        'Empresa / Operacional': '#06B6D4',
+        'Financeiro / Cobrança': '#F59E0B',
+        'Suporte / Atendimento': '#EC4899',
+        'Marketing / Newsletters': '#3B82F6',
+        'Outros / Geral': '#64748B'
+      };
+
+      const bgColors = labels.map(l => colors[l] || '#8B5CF6');
+
+      if (categoryChartInstance) categoryChartInstance.destroy();
+
+      categoryChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels.length ? labels : ['Nenhum e-mail'],
+          datasets: [{
+            data: values.length ? values : [1],
+            backgroundColor: values.length ? bgColors : ['#334155'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#94A3B8', font: { size: 11 } } }
+          }
+        }
+      });
+    }
+
+    function updateUrgencyChart(urgencyData) {
+      const ctx = document.getElementById('urgencyChart').getContext('2d');
+      const labels = ['Alta', 'Média', 'Baixa'];
+      const values = labels.map(l => urgencyData[l] || 0);
+
+      if (urgencyChartInstance) urgencyChartInstance.destroy();
+
+      urgencyChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'E-mails',
+            data: values,
+            backgroundColor: ['#EF4444', '#F59E0B', '#10B981'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { ticks: { color: '#94A3B8', precision: 0 }, grid: { color: '#334155' } },
+            x: { ticks: { color: '#94A3B8' }, grid: { display: false } }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function renderTable(emails) {
+      const tbody = document.getElementById('email-table-body');
+      if (!emails || emails.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-500 italic">Nenhum e-mail registrado ainda. Clique em "Processar Agora" ou "Simulação".</td></tr>`;
+        return;
+      }
+
+      const urgencyBadges = {
+        'Alta': 'bg-rose-500/20 text-rose-400 border border-rose-500/30',
+        'Média': 'bg-amber-500/20 text-amber-400 border border-amber-500/30',
+        'Baixa': 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+      };
+
+      const categoryBadges = {
+        'comercial': 'bg-emerald-950/70 text-emerald-300 border border-emerald-800',
+        'empresa': 'bg-cyan-950/70 text-cyan-300 border border-cyan-800',
+        'financeiro': 'bg-amber-950/70 text-amber-300 border border-amber-800',
+        'suporte': 'bg-pink-950/70 text-pink-300 border border-pink-800',
+        'marketing': 'bg-blue-950/70 text-blue-300 border border-blue-800',
+        'outros': 'bg-slate-800 text-slate-400 border border-slate-700'
+      };
+
+      tbody.innerHTML = emails.map(e => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-3 px-4 text-slate-400 whitespace-nowrap">${e.message_date || '-'}</td>
+          <td class="py-3 px-4 font-medium text-white max-w-[150px] truncate" title="${e.sender_email}">
+            ${e.sender_name || e.sender_email}
+          </td>
+          <td class="py-3 px-4 max-w-[200px] truncate" title="${e.subject}">
+            ${e.subject || '(Sem Assunto)'}
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-md text-[11px] ${categoryBadges[e.category_id] || categoryBadges['outros']}">
+              ${e.category_name}
+            </span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold ${urgencyBadges[e.urgency] || urgencyBadges['Baixa']}">
+              ${e.urgency || 'Baixa'}
+            </span>
+          </td>
+          <td class="py-3 px-4 max-w-[220px] truncate text-slate-400" title="${e.summary}">
+            ${e.summary || '-'}
+          </td>
+          <td class="py-3 px-4 font-mono text-emerald-400">
+            ${e.estimated_value || '-'}
+          </td>
+          <td class="py-3 px-4 text-slate-400 text-[11px]">
+            ${e.status || '-'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterTable() {
+      const q = document.getElementById('search-box').value.toLowerCase();
+      const filtered = allEmailsData.filter(e => 
+        (e.subject && e.subject.toLowerCase().includes(q)) ||
+        (e.sender_email && e.sender_email.toLowerCase().includes(q)) ||
+        (e.sender_name && e.sender_name.toLowerCase().includes(q)) ||
+        (e.summary && e.summary.toLowerCase().includes(q))
+      );
+      renderTable(filtered);
+    }
+
+    async function triggerProcessing(isDryRun) {
+      const btn = isDryRun ? document.getElementById('btn-dry') : document.getElementById('btn-run');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processando...`;
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/processar?dry_run=${isDryRun}&limit=20`, { method: 'POST' });
+        const data = await res.json();
+        alert(`Processamento concluído!\n${data.processed_count} e-mail(s) processados.`);
+        fetchDashboardData();
+      } catch (err) {
+        alert("Erro ao disparar processamento: " + err.message);
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    async function testAiClassification() {
+      const subject = document.getElementById('sim-subject').value;
+      const body = document.getElementById('sim-body').value;
+      const resultBox = document.getElementById('sim-result');
+
+      if (!subject && !body) {
+        alert("Por favor, preencha o assunto ou corpo da mensagem.");
+        return;
+      }
+
+      resultBox.innerHTML = `<p class="text-center italic"><i class="fa-solid fa-spinner fa-spin"></i> Analisando texto com IA...</p>`;
+
+      try {
+        const res = await fetch('/api/classificar-texto', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject, body, sender_email: "cliente@empresa.com" })
+        });
+        const d = await res.json();
+
+        resultBox.innerHTML = `
+          <div class="space-y-2 text-left">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-400">Categoria Detectada:</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-900/60 text-emerald-300 font-semibold text-xs border border-emerald-700">
+                ${d.category_name} (Score: ${d.score})
+              </span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-400">Nível de Urgência:</span>
+              <span class="text-xs font-bold text-amber-400">${d.ai_insights.urgency}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-400">Valor Estimado:</span>
+              <span class="text-xs font-mono font-semibold text-emerald-400">${d.ai_insights.estimated_value}</span>
+            </div>
+            <div class="pt-2 border-t border-slate-800">
+              <p class="text-xs text-slate-400 font-medium">Resumo Inteligente da IA:</p>
+              <p class="text-xs text-slate-200 mt-0.5">${d.ai_insights.summary}</p>
+            </div>
+            <div class="pt-1">
+              <p class="text-[11px] text-slate-500">Motivos: ${d.reasons.join(', ') || 'Heurística de contexto'}</p>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        resultBox.innerHTML = `<p class="text-rose-400 text-center">Falha ao classificar: ${err.message}</p>`;
+      }
+    }
+
+    async function downloadLatestReport() {
+      try {
+        const res = await fetch('/api/relatorios');
+        const list = await res.json();
+        if (list.length === 0) {
+          alert("Nenhum relatório Excel gerado ainda. Execute uma triagem primeiro!");
+          return;
+        }
+        const latest = list[0];
+        window.open(`/api/relatorios/download/${latest.filename}`, '_blank');
+      } catch (err) {
+        alert("Erro ao buscar relatórios: " + err.message);
+      }
+    }
+
+    // Carregamento inicial
+    fetchDashboardData();
+    // Atualização automática a cada 30 segundos
+    setInterval(fetchDashboardData, 30000);
+  </script>
+</body>
+</html>
